@@ -1,6 +1,11 @@
 use clap::Parser;
+use src::{opts::Opts, config::Config};
 
-fn main () {
-    let opts = src::opts::Opts::parse();
-    println!("{:?}", opts)
+use anyhow::Result;
+
+fn main () -> Result<()> {
+    let opts: Config = Opts::parse().try_into()?;
+    println!("{:?}", opts);
+
+    return Ok(());
 }
