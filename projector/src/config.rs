@@ -3,7 +3,7 @@ use anyhow::{anyhow, Context, Result};
 use crate::opts::Opts;
 
 
-#[derive(Debug, PartialEq)]
+#[derive(Debug, PartialEq, Clone)]
 pub enum Operation {
     Print(Option<String>),
     Add(String, String),
@@ -80,7 +80,7 @@ fn get_pwd(pwd: Option<PathBuf>) -> Result<PathBuf> {
     return Ok(std::env::current_dir().context("errored getting current_dir")?);
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct Config {
     pub operation: Operation,
     pub pwd: PathBuf,

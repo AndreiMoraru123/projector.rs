@@ -2,6 +2,7 @@ use std::collections::HashMap;
 use std::path::PathBuf;
 use serde::{Deserialize, Serialize};
 use crate::config::Config;
+use anyhow::Result;
 
 type HM = HashMap<PathBuf, HashMap<String, String>>;
 
@@ -10,7 +11,7 @@ struct Data {
     pub projector: HM,
 }
 
-struct Projector {
+pub struct Projector {
     config: Config,
     data: Data,
 }
@@ -71,6 +72,20 @@ impl Projector {
             config,
             data,
         };
+    }
+
+    pub fn save(&self) -> Result<()> {
+        let result = serde_json::to_string(&self.data)?;
+        if let Some(p) = self.config.config.parent() {
+
+            if std::fs::metadata(p).is_err() {
+                std::fs::create_dir_all(p).ok();
+            }
+        }
+
+        std::fs::write(&self.config.config, result)?;
+
+        return Ok(());
     }
 
     pub fn set_value(&mut self, key: String, value: String) {
